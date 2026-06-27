@@ -1,0 +1,18 @@
+{
+  "name": "Nero Hip Mobility",
+  "short_name": "Hip Mobility",
+  "description": "3-day hip mobility program by Nermin Mehmedagic",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#c7171a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

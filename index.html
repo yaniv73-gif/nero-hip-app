@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c7171a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hip Mobility">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Nero Hip Mobility</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0d0d0d;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#app{max-width:480px;margin:0 auto;padding:1.25rem 1rem;min-height:100vh}
+.nb{cursor:pointer;padding:6px 14px;border:1px solid #2a2a2a;border-radius:8px;background:transparent;color:#777;font-size:14px;touch-action:manipulation}
+.nb:active{border-color:#c7171a;color:#c7171a}
+.ndc{cursor:pointer;border:1px solid #1e1e1e;border-radius:12px;padding:1rem 1.125rem;background:#131313;display:flex;align-items:center;gap:.875rem;margin-bottom:.625rem;touch-action:manipulation}
+.ndc:active{border-color:#c7171a55;background:#191313}
+.ndc.dn{border-color:#1a3d1a;background:#0b160b}
+.nec{border:1px solid #1e1e1e;border-radius:12px;padding:1rem;margin-bottom:.75rem;background:#131313}
+.nec.dn{border-color:#1a3d1a;background:#0b160b}
+.nsd{width:36px;height:36px;border-radius:50%;border:2px solid #c7171a;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation}
+.nsd.dn{background:#c7171a}
+.npa{width:100%;padding:15px;border:none;border-radius:10px;background:#c7171a;color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:1rem;touch-action:manipulation}
+.npa:active{background:#a41214}
+.nsa{width:100%;padding:15px;border:none;border-radius:10px;background:#1e621e;color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:1rem;touch-action:manipulation}
+.nsa:active{background:#165016}
+.ntb{padding:10px 18px;border-radius:8px;border:1px solid #c7171a;background:transparent;color:#c7171a;font-size:14px;cursor:pointer;touch-action:manipulation}
+.ntb:active,.ntb.on{background:#c7171a;color:#fff}
+.nwc{width:24px;height:24px;border-radius:5px;border:1px solid #383838;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;color:#fff;touch-action:manipulation}
+.nwc.dn{background:#1e621e;border-color:#1e621e}
+h1{font-size:22px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const RC=2*Math.PI*20;
+
+const PG={
+  wu:[
+    {n:'Leg swings',s:2,r:'10–15 reps'},
+    {n:'Jogging in place',s:2,r:'10–15 reps'},
+    {n:'Bodyweight squats',s:2,r:'10–15 reps'},
+    {n:'5-min brisk walk',s:1,r:'5 min'}
+  ],
+  days:[
+    {id:1,title:'Hip Mobility, Floor Work',dur:'~25 min',ex:[
+      {n:'Shin Box',s:3,r:'10 reps',q:'Heels on the floor. Rotate hip side to side. Keep your back straight.'},
+      {n:'Shin Box w/ Hip Thrust',s:3,r:'10 reps',q:'Shift your hips and thrust them forward at the end of each rotation.'},
+      {n:'S-Sit Switch',s:3,r:'10 reps',q:'One leg bent in front, other extended. Rotate hips to switch. Control the movement.'}
+    ]},
+    {id:2,title:'Hip Mobility, Squat Series',dur:'~25 min',ex:[
+      {n:'Hip Up to Combat Stance',s:3,r:'10 reps',q:'Roll over your seated leg gently and thrust your hip forward at the top.'},
+      {n:'Squat to Knee Drop',s:3,r:'10 reps',q:'Squat as deep as you can, then drop your knee to the floor with control.'},
+      {n:'Squat Hold to Internal Rotation',s:3,r:'10 reps',q:'Hold squat at 90°. Internally rotate your leg and try to touch the floor.'}
+    ]},
+    {id:3,title:'Hip Strength',dur:'~30 min',ex:[
+      {n:'Deep Squat Sit',s:3,d:60,q:'Squat as deep as possible and hold the position for 60 seconds.'},
+      {n:'Side to Side Lunges',s:3,r:'10 reps',q:'Wide stance. Work your way down slowly, build depth over time.'},
+      {n:'Shin Box to Kick Through',s:3,r:'10 reps',q:'With control, extend your leg forward, then bring it back. Both sides.'},
+      {n:'High Knee Hold',s:3,d:45,q:'Bring your knee as high as possible, then hold it there for 30–60 sec.'}
+    ]}
+  ]
+};
+
+const ST={
+  v:'home',di:0,
+  wu:{},sets:{},tm:{},
+  done:JSON.parse(localStorage.getItem('nhd')||'[]')
+};
+
+const app=document.getElementById('app');
+
+function exD(ei,s){for(let i=0;i<s;i++)if(!ST.sets[ei+'_'+i])return false;return true;}
+
+function render(){
+  if(ST.v==='home')rHome();
+  else if(ST.v==='wu')rWu();
+  else rWk();
+  window.scrollTo(0,0);
+}
+
+function rHome(){
+  const p=Math.round(ST.done.length/3*100);
+  app.innerHTML=`
+<div style="text-align:center;padding:1.5rem 0 1.75rem">
+  <div style="font-size:10px;letter-spacing:3px;color:#c7171a;text-transform:uppercase;margin-bottom:10px">Nermin Mehmedagic</div>
+  <h1 style="color:#fff;margin-bottom:6px">Hip Mobility Program</h1>
+  <div style="font-size:13px;color:#4a4a4a">3 days · 10 exercises · 30 min per day</div>
+  <div style="margin-top:1.25rem">
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+      <span style="color:#3d3d3d">Progress</span>
+      <span style="color:#c7171a">${ST.done.length}/3 days complete</span>
+    </div>
+    <div style="height:5px;background:#191919;border-radius:3px">
+      <div style="height:100%;width:${p}%;background:#c7171a;border-radius:3px"></div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom:1.25rem">
+${PG.days.map((d,i)=>{const dn=ST.done.includes(d.id);return`
+<div class="ndc${dn?' dn':''}" onclick="pDay(${i})">
+  <div style="width:46px;height:46px;border-radius:50%;border:2px solid ${dn?'#2a6e2a':'#c7171a'};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:${dn?'#2a6e2a':'#c7171a'};flex-shrink:0">${dn?'✓':d.id}</div>
+  <div style="flex:1">
+    <div style="font-size:15px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">Day ${d.id}: ${d.title}</div>
+    <div style="font-size:12px;color:#3a3a3a">${d.ex.length} exercises · ${d.dur}</div>
+  </div>
+  <span style="color:#2a2a2a;font-size:24px">›</span>
+</div>`}).join('')}
+</div>
+
+<div style="padding:.875rem 1rem;border:1px solid #181818;border-radius:10px;background:#0f0f0f;margin-bottom:1.5rem">
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#303030;margin-bottom:6px">Before every session</div>
+  <div style="font-size:13px;color:#484848;line-height:1.6">Leg swings, jogging in place, bodyweight squats — 2×10–15 reps each, plus a 5-min brisk walk. Or start right after martial arts training.</div>
+</div>
+
+<div style="text-align:center;padding-bottom:1rem">
+  <span onclick="rPrg()" style="font-size:12px;color:#252525;cursor:pointer;text-decoration:underline">reset progress</span>
+</div>`;
+}
+
+function rWu(){
+  const d=PG.days[ST.di];
+  app.innerHTML=`
+<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;padding-top:.25rem">
+  <button class="nb" onclick="goH()">← Home</button>
+  <div>
+    <div style="font-size:10px;letter-spacing:2px;color:#c7171a;text-transform:uppercase">Day ${d.id}</div>
+    <div style="font-size:18px;font-weight:600;color:#fff">${d.title}</div>
+  </div>
+</div>
+<div style="background:#131313;border:1px solid #1e1e1e;border-radius:12px;padding:1rem;margin-bottom:1rem">
+  <div style="font-size:10px;font-weight:700;color:#c7171a;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Pre-Session Warm-Up</div>
+  ${PG.wu.map((w,i)=>`
+  <div style="display:flex;align-items:center;gap:.75rem;padding:.625rem 0;${i<PG.wu.length-1?'border-bottom:1px solid #181818':''}">
+    <div class="nwc${ST.wu[i]?' dn':''}" onclick="tWu(${i})">${ST.wu[i]?'✓':''}</div>
+    <span style="font-size:14px;color:${ST.wu[i]?'#343434':'#d0d0d0'};${ST.wu[i]?'text-decoration:line-through;':''}">${w.n}</span>
+    <span style="font-size:12px;color:#363636;margin-left:auto">${w.s>1?w.s+'× ':''} ${w.r}</span>
+  </div>`).join('')}
+</div>
+<button class="npa" onclick="goWk()">Start Workout →</button>
+<div style="font-size:12px;color:#2e2e2e;text-align:center;margin-top:8px;padding-bottom:1rem">Check off items above, or skip if training right after martial arts</div>`;
+}
+
+function rWk(){
+  const d=PG.days[ST.di];
+  const dc=d.ex.filter((_,i)=>exD(i,d.ex[i].s)).length;
+  const p=Math.round(dc/d.ex.length*100);
+  const allD=dc===d.ex.length;
+  app.innerHTML=`
+<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.125rem;padding-top:.25rem">
+  <button class="nb" onclick="goWu()">← Warm-Up</button>
+  <div style="flex:1">
+    <div style="font-size:10px;letter-spacing:2px;color:#c7171a;text-transform:uppercase">Day ${d.id} · ${d.dur}</div>
+    <div style="font-size:17px;font-weight:600;color:#fff">${d.title}</div>
+  </div>
+</div>
+<div style="margin-bottom:1.25rem">
+  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+    <span style="color:#3d3d3d">${dc}/${d.ex.length} exercises</span>
+    <span style="color:#c7171a">${p}%</span>
+  </div>
+  <div style="height:4px;background:#191919;border-radius:2px">
+    <div style="height:100%;width:${p}%;background:#c7171a;border-radius:2px;transition:width .3s"></div>
+  </div>
+</div>
+${d.ex.map((ex,ei)=>{
+  const dn=exD(ei,ex.s);
+  const t=ST.tm[ei]||{rem:ex.d||0,running:false};
+  const off=ex.d?(RC*(1-t.rem/ex.d)).toFixed(2):'0';
+  const sc=ex.d?(t.rem===0?'#469446':t.running?'#c7171a':'#2a2a2a'):'#2a2a2a';
+  return`
+<div class="nec${dn?' dn':''}">
+  <div style="display:flex;align-items:flex-start;margin-bottom:.75rem">
+    <div style="flex:1">
+      <div style="font-size:16px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">${ex.n}</div>
+      <div style="font-size:12px;color:#424242">${ex.r?ex.s+'×'+ex.r:ex.s+' sets · hold '+ex.d+'s'}</div>
+    </div>${dn?'<div style="color:#469446;font-size:20px;margin-top:2px;flex-shrink:0">✓</div>':''}
+  </div>
+  <div style="font-size:13px;color:#484848;font-style:italic;border-left:2px solid #3a0808;padding-left:10px;margin-bottom:.875rem;line-height:1.55">"${ex.q}"</div>
+  ${ex.d?`
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.875rem">
+    <div style="position:relative;width:58px;height:58px;flex-shrink:0">
+      <svg width="58" height="58" viewBox="0 0 58 58">
+        <circle cx="29" cy="29" r="20" fill="none" stroke="#1c1c1c" stroke-width="5"/>
+        <circle id="r${ei}" cx="29" cy="29" r="20" fill="none" stroke="${sc}" stroke-width="5" stroke-dasharray="${RC.toFixed(2)}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 29 29)"/>
+      </svg>
+      <div id="tt${ei}" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${t.rem===0?'#469446':'#e0e0e0'}">${t.rem}s</div>
+    </div>
+    <div>
+      <button id="tb${ei}" class="ntb${t.running?' on':''}" onclick="doTm(${ei},${ex.d})">${t.running?'Pause':t.rem===0?'Restart':t.rem<ex.d?'Resume':'Start Timer'}</button>
+      ${t.rem===0?'<div style="font-size:12px;color:#469446;margin-top:6px">Done! Check off below.</div>':''}
+    </div>
+  </div>`:''}
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <span style="font-size:10px;color:#303030;text-transform:uppercase;letter-spacing:1px;margin-right:4px">Sets</span>
+    ${Array.from({length:ex.s}).map((_,si)=>`
+    <div class="nsd${ST.sets[ei+'_'+si]?' dn':''}" onclick="tSt(${ei},${si})">
+      ${ST.sets[ei+'_'+si]?`<svg width="15" height="15" viewBox="0 0 15 15"><polyline points="2.5,7.5 6,11 12.5,3" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}
+    </div>`).join('')}
+  </div>
+</div>`}).join('')}
+${allD?`<button class="nsa" onclick="cDay()">${ST.done.includes(d.id)?'Day '+d.id+' Already Complete ✓':'Mark Day '+d.id+' Complete ✓'}</button>`:''}
+<div style="padding-bottom:1.5rem"></div>`;
+}
+
+function pDay(i){pTm();ST.di=i;ST.wu={};ST.sets={};ST.tm={};ST.v='wu';render();}
+function goH(){pTm();ST.v='home';render();}
+function goWu(){pTm();ST.v='wu';render();}
+function goWk(){ST.v='wk';render();}
+function tWu(i){ST.wu[i]=!ST.wu[i];render();}
+function tSt(ei,si){ST.sets[ei+'_'+si]=!ST.sets[ei+'_'+si];render();}
+function pTm(){Object.values(ST.tm).forEach(t=>{if(t.iv){clearInterval(t.iv);t.iv=null;}t.running=false;});}
+
+function doTm(ei,dur){
+  if(!ST.tm[ei])ST.tm[ei]={rem:dur,running:false,iv:null};
+  const t=ST.tm[ei];
+  if(t.rem===0){t.rem=dur;t.running=false;render();return;}
+  if(t.running){clearInterval(t.iv);t.iv=null;t.running=false;render();return;}
+  t.running=true;render();
+  t.iv=setInterval(()=>{
+    t.rem--;
+    if(t.rem<=0){
+      t.rem=0;t.running=false;clearInterval(t.iv);t.iv=null;
+      if(ST.v==='wk')render();
+      return;
+    }
+    const off=(RC*(1-t.rem/dur)).toFixed(2);
+    const rr=document.getElementById('r'+ei);
+    const tt=document.getElementById('tt'+ei);
+    const tb=document.getElementById('tb'+ei);
+    if(rr)rr.setAttribute('stroke-dashoffset',off);
+    if(tt)tt.textContent=t.rem+'s';
+    if(tb)tb.textContent='Pause';
+  },1000);
+}
+
+function cDay(){
+  const id=PG.days[ST.di].id;
+  if(!ST.done.includes(id))ST.done.push(id);
+  localStorage.setItem('nhd',JSON.stringify(ST.done));
+  pTm();ST.v='home';render();
+}
+function rPrg(){ST.done=[];localStorage.setItem('nhd','[]');render();}
+render();
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));
+}
+</script>
+</body>
+</html>
