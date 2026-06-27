@@ -108,19 +108,19 @@ ${PG.days.map((d,i)=>{const dn=ST.done.includes(d.id);return`
   <div style="width:46px;height:46px;border-radius:50%;border:2px solid ${dn?'#2a6e2a':'#c7171a'};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:${dn?'#2a6e2a':'#c7171a'};flex-shrink:0">${dn?'✓':d.id}</div>
   <div style="flex:1">
     <div style="font-size:15px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">Day ${d.id}: ${d.title}</div>
-    <div style="font-size:12px;color:#3a3a3a">${d.ex.length} exercises · ${d.dur}</div>
+    <div style="font-size:12px;color:#888">${d.ex.length} exercises · ${d.dur}</div>
   </div>
-  <span style="color:#2a2a2a;font-size:24px">›</span>
+  <span style="color:#555;font-size:24px">›</span>
 </div>`}).join('')}
 </div>
 
 <div style="padding:.875rem 1rem;border:1px solid #181818;border-radius:10px;background:#0f0f0f;margin-bottom:1.5rem">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#303030;margin-bottom:6px">Before every session</div>
-  <div style="font-size:13px;color:#484848;line-height:1.6">Leg swings, jogging in place, bodyweight squats — 2×10–15 reps each, plus a 5-min brisk walk. Or start right after martial arts training.</div>
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#777;margin-bottom:6px">Before every session</div>
+  <div style="font-size:13px;color:#888;line-height:1.6">Leg swings, jogging in place, bodyweight squats — 2×10–15 reps each, plus a 5-min brisk walk. Or start right after martial arts training.</div>
 </div>
 
 <div style="text-align:center;padding-bottom:1rem">
-  <span onclick="rPrg()" style="font-size:12px;color:#252525;cursor:pointer;text-decoration:underline">reset progress</span>
+  <span onclick="rPrg()" style="font-size:12px;color:#555;cursor:pointer;text-decoration:underline">reset progress</span>
 </div>`;
 }
 
@@ -140,11 +140,11 @@ function rWu(){
   <div style="display:flex;align-items:center;gap:.75rem;padding:.625rem 0;${i<PG.wu.length-1?'border-bottom:1px solid #181818':''}">
     <div class="nwc${ST.wu[i]?' dn':''}" onclick="tWu(${i})">${ST.wu[i]?'✓':''}</div>
     <span style="font-size:14px;color:${ST.wu[i]?'#343434':'#d0d0d0'};${ST.wu[i]?'text-decoration:line-through;':''}">${w.n}</span>
-    <span style="font-size:12px;color:#363636;margin-left:auto">${w.s>1?w.s+'× ':''} ${w.r}</span>
+    <span style="font-size:12px;color:#888;margin-left:auto">${w.s>1?w.s+'× ':''} ${w.r}</span>
   </div>`).join('')}
 </div>
 <button class="npa" onclick="goWk()">Start Workout →</button>
-<div style="font-size:12px;color:#2e2e2e;text-align:center;margin-top:8px;padding-bottom:1rem">Check off items above, or skip if training right after martial arts</div>`;
+<div style="font-size:12px;color:#666;text-align:center;margin-top:8px;padding-bottom:1rem">Check off items above, or skip if training right after martial arts</div>`;
 }
 
 function rWk(){
@@ -162,7 +162,7 @@ function rWk(){
 </div>
 <div style="margin-bottom:1.25rem">
   <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
-    <span style="color:#3d3d3d">${dc}/${d.ex.length} exercises</span>
+    <span style="color:#888">${dc}/${d.ex.length} exercises</span>
     <span style="color:#c7171a">${p}%</span>
   </div>
   <div style="height:4px;background:#191919;border-radius:2px">
@@ -179,10 +179,10 @@ ${d.ex.map((ex,ei)=>{
   <div style="display:flex;align-items:flex-start;margin-bottom:.75rem">
     <div style="flex:1">
       <div style="font-size:16px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">${ex.n}</div>
-      <div style="font-size:12px;color:#424242">${ex.r?ex.s+'×'+ex.r:ex.s+' sets · hold '+ex.d+'s'}</div>
+      <div style="font-size:12px;color:#888">${ex.r?ex.s+'×'+ex.r:ex.s+' sets · hold '+ex.d+'s'}</div>
     </div>${dn?'<div style="color:#469446;font-size:20px;margin-top:2px;flex-shrink:0">✓</div>':''}
   </div>
-  <div style="font-size:13px;color:#484848;font-style:italic;border-left:2px solid #3a0808;padding-left:10px;margin-bottom:.875rem;line-height:1.55">"${ex.q}"</div>
+  <div style="font-size:13px;color:#888;font-style:italic;border-left:2px solid #3a0808;padding-left:10px;margin-bottom:.875rem;line-height:1.55">"${ex.q}"</div>
   ${ex.d?`
   <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.875rem">
     <div style="position:relative;width:58px;height:58px;flex-shrink:0">
@@ -198,7 +198,7 @@ ${d.ex.map((ex,ei)=>{
     </div>
   </div>`:''}
   <div style="display:flex;gap:.5rem;align-items:center">
-    <span style="font-size:10px;color:#303030;text-transform:uppercase;letter-spacing:1px;margin-right:4px">Sets</span>
+    <span style="font-size:10px;color:#777;text-transform:uppercase;letter-spacing:1px;margin-right:4px">Sets</span>
     ${Array.from({length:ex.s}).map((_,si)=>`
     <div class="nsd${ST.sets[ei+'_'+si]?' dn':''}" onclick="tSt(${ei},${si})">
       ${ST.sets[ei+'_'+si]?`<svg width="15" height="15" viewBox="0 0 15 15"><polyline points="2.5,7.5 6,11 12.5,3" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}
