@@ -48,17 +48,17 @@ const PG={
     {n:'5-min brisk walk',s:1,r:'5 min'}
   ],
   days:[
-    {id:1,title:'Hip Mobility, Floor Work',dur:'~25 min',ex:[
+    {id:1,title:'Hip Mobility, Floor Work',dur:'~25 min',yt:'https://www.youtube.com/watch?v=GAW8JJ4geNo',ex:[
       {n:'Shin Box',s:3,r:'10 reps',q:'Heels on the floor. Rotate hip side to side. Keep your back straight.'},
       {n:'Shin Box w/ Hip Thrust',s:3,r:'10 reps',q:'Shift your hips and thrust them forward at the end of each rotation.'},
       {n:'S-Sit Switch',s:3,r:'10 reps',q:'One leg bent in front, other extended. Rotate hips to switch. Control the movement.'}
     ]},
-    {id:2,title:'Hip Mobility, Squat Series',dur:'~25 min',ex:[
+    {id:2,title:'Hip Mobility, Squat Series',dur:'~25 min',yt:'https://www.youtube.com/watch?v=og6CYeQ4TxA',ex:[
       {n:'Hip Up to Combat Stance',s:3,r:'10 reps',q:'Roll over your seated leg gently and thrust your hip forward at the top.'},
       {n:'Squat to Knee Drop',s:3,r:'10 reps',q:'Squat as deep as you can, then drop your knee to the floor with control.'},
       {n:'Squat Hold to Internal Rotation',s:3,r:'10 reps',q:'Hold squat at 90°. Internally rotate your leg and try to touch the floor.'}
     ]},
-    {id:3,title:'Hip Strength',dur:'~30 min',ex:[
+    {id:3,title:'Hip Strength',dur:'~30 min',yt:'https://www.youtube.com/watch?v=yYVSOpGzLto',ex:[
       {n:'Deep Squat Sit',s:3,d:60,q:'Squat as deep as possible and hold the position for 60 seconds.'},
       {n:'Side to Side Lunges',s:3,r:'10 reps',q:'Wide stance. Work your way down slowly, build depth over time.'},
       {n:'Shin Box to Kick Through',s:3,r:'10 reps',q:'With control, extend your leg forward, then bring it back. Both sides.'},
@@ -108,7 +108,8 @@ ${PG.days.map((d,i)=>{const dn=ST.done.includes(d.id);return`
   <div style="width:46px;height:46px;border-radius:50%;border:2px solid ${dn?'#2a6e2a':'#c7171a'};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:${dn?'#2a6e2a':'#c7171a'};flex-shrink:0">${dn?'✓':d.id}</div>
   <div style="flex:1">
     <div style="font-size:15px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">Day ${d.id}: ${d.title}</div>
-    <div style="font-size:12px;color:#888">${d.ex.length} exercises · ${d.dur}</div>
+    <div style="font-size:12px;color:#888;margin-bottom:6px">${d.ex.length} exercises · ${d.dur}</div>
+    <a href="${d.yt}" target="_blank" style="font-size:11px;color:#c7171a;text-decoration:none;display:inline-flex;align-items:center;gap:4px">▶ Watch walkthrough</a>
   </div>
   <span style="color:#555;font-size:24px">›</span>
 </div>`}).join('')}
@@ -157,7 +158,8 @@ function rWk(){
   <button class="nb" onclick="goWu()">← Warm-Up</button>
   <div style="flex:1">
     <div style="font-size:10px;letter-spacing:2px;color:#c7171a;text-transform:uppercase">Day ${d.id} · ${d.dur}</div>
-    <div style="font-size:17px;font-weight:600;color:#fff">${d.title}</div>
+    <div style="font-size:17px;font-weight:600;color:#fff;margin-bottom:3px">${d.title}</div>
+    <a href="${d.yt}" target="_blank" style="font-size:11px;color:#c7171a;text-decoration:none">▶ Watch walkthrough</a>
   </div>
 </div>
 <div style="margin-bottom:1.25rem">
