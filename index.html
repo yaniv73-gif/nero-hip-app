@@ -108,11 +108,13 @@ ${PG.days.map((d,i)=>{const dn=ST.done.includes(d.id);return`
   <div style="width:46px;height:46px;border-radius:50%;border:2px solid ${dn?'#2a6e2a':'#c7171a'};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:${dn?'#2a6e2a':'#c7171a'};flex-shrink:0">${dn?'✓':d.id}</div>
   <div style="flex:1">
     <div style="font-size:15px;font-weight:600;color:${dn?'#469446':'#f0f0f0'};margin-bottom:3px">Day ${d.id}: ${d.title}</div>
-    <div style="font-size:12px;color:#888;margin-bottom:6px">${d.ex.length} exercises · ${d.dur}</div>
-    <a href="${d.yt}" target="_blank" style="font-size:11px;color:#c7171a;text-decoration:none;display:inline-flex;align-items:center;gap:4px">▶ Watch walkthrough</a>
+    <div style="font-size:12px;color:#888">${d.ex.length} exercises · ${d.dur}</div>
   </div>
   <span style="color:#555;font-size:24px">›</span>
-</div>`}).join('')}
+</div>
+<a href="${d.yt}" target="_blank" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:8px;padding:.5rem .75rem;margin-top:-4px;margin-bottom:.75rem;background:#1a0808;border:1px solid #3a0808;border-radius:0 0 10px 10px;text-decoration:none;color:#c7171a;font-size:13px">
+  <span style="font-size:16px">▶</span> Watch Day ${d.id} full walkthrough on YouTube
+</a>`}).join('')}
 </div>
 
 <div style="padding:.875rem 1rem;border:1px solid #181818;border-radius:10px;background:#0f0f0f;margin-bottom:1.5rem">
